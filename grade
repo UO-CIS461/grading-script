@@ -1,0 +1,52 @@
+#! /bin/bash
+#
+# Automatically test a project turned in via Canvas.
+#
+# Usage:  ./grade  smith
+#    where 'smith' is a unique prefix of a student surname, matching
+#    a submission file in directory "submissons". 
+#
+# Extracts configuration information from the submission file and
+# attempts to test the project on the current host.
+#
+#
+echo "Finding submission for ${1}"
+prefix="$1"
+echo "Look for submissions/${1}*"
+submission=`ls submissions/${1}*`
+if  [[ ! -f ${submission} ]] ; then
+    echo "Didn't match ${prefix} to a submission"
+    exit 1
+else
+    echo "Using submission file ${submission}"
+fi
+#
+echo "Cleaning up"
+rm -rf actual/*
+rm -rf repo_turnin
+#
+# Submission file should look like this:
+# [DEFAULT]
+# name = Will Smith
+# host = gnat.d.cs.uoregon.edu
+# path = /Users/smith/cis561/lexer
+# repo = https://www.bitbucket.org/myaccount/cis561
+#
+name=`python3 extract.py ${submission} name`
+echo "Name: ${name}"
+host=`python3 extract.py ${submission} host`
+path=`python3 extract.py ${submission} path`
+repo=`python3 extract.py ${submission} repo`
+#
+echo "Host is ${host}"
+echo "Looking for executable at ${path}"
+if [[ ! -f ${path}/scanner ]]; then
+   echo "*** Did not find scanner binary or script"
+   echo "*** at ${path}"
+   echo "*** Are we on ${host}?"
+   exit 1
+fi; 
+#
+./run ${path}/scanner
+#
+
