@@ -5,14 +5,19 @@
 # my scanner. There will be some discrepancies that
 # don't matter, but there shouldn't be too many
 #
+echo "Cleaning up comparison files"
+rm -f ,actual ,expected ,diffs
 echo "Checking stdout files"
 for expected in `ls expect/*.qk.out`; do
     actual=actual/`basename ${expected}`
     cat ${expected} | python3 normalize.py >,expected
     cat ${actual} | python3 normalize.py >,actual
+    echo "*************************************" >>,diffs
     echo ${actual} >> ,diffs
+    echo "*************************************" >>,diffs
     echo ${actual}
     diff ,expected ,actual >> ,diffs
+    echo "**** end of ${actual} ************" >>,diffs
 done
 echo "Differences:"
 cat ,diffs

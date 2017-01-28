@@ -47,6 +47,7 @@ if [[ ! -f ${path}/scanner ]]; then
    exit 1
 fi; 
 #
-./run ${path}/scanner
+./run ${path}/scanner actual
 #
+./compare
 

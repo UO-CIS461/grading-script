@@ -1,12 +1,13 @@
 #! /bin/bash
 #
-# Usage: "run path/to/scanner"
+# Usage: "run path/to/scanner destdir"
 #
 
 scanner=$1
+destdir=$2
 
 for src in `ls samples/*.qk`; do
    srcname=`basename ${src}`
-   echo "Scanning ${src}, producing expect/${srcname}.out"
-   ${scanner} ${src} >expect/${srcname}.out 2>expect/${srcname}.err
+   echo "Scanning ${src}, producing ${destname}/${srcname}.out"
+   ${scanner} ${src} >${destdir}/${srcname}.out 2>${destdir}/${srcname}.err
 done
